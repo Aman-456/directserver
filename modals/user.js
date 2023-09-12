@@ -5,15 +5,16 @@ const bcrypt = require("bcryptjs");
 
 const UserSchema = new Schema(
   {
-    id: Schema.ObjectId,
-    email: { type: String, trim: true },
-    firstName: { type: String, trim: true },
-    phone: { type: String, trim: true },
-    lastName: { type: String, trim: true },
+    email: { type: String, trim: true, required: true },
+    firstName: { type: String, trim: true, required: true },
+    phone: { type: String, trim: true, required: true },
+    lastName: { type: String, trim: true, required: true },
     password: { type: String },
     verify: { type: Boolean, default: false },
+    focusArea: { type: String, required: true },
     otp: { type: String },
     expireTime: { type: Date },
+    role: { type: String, required: true },
     profileComplete: false,
   },
   { timestamps: true }
