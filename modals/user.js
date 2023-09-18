@@ -11,10 +11,10 @@ const UserSchema = new Schema(
     lastName: { type: String, trim: true, required: true },
     password: { type: String },
     verify: { type: Boolean, default: false },
-    focusArea: { type: String, required: true },
+    // focusArea: { type: String, required: true },
     otp: { type: String },
     expireTime: { type: Date },
-    role: { type: String, required: true },
+    type: { type: String, required: true },
     profileComplete: false,
   },
   { timestamps: true }
