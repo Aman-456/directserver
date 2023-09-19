@@ -4,6 +4,7 @@ const cors = require("cors");
 const compression = require("compression");
 
 const user = require("./routes/user.js");
+const { send } = require("./common/sms.js");
 
 require("./middlewares/authenticator.js");
 
@@ -42,3 +43,5 @@ app.use("/user", user.routes);
 app.listen(port, () => {
   console.log(`Server listening at http://${host}:${port}`);
 });
+
+send();
