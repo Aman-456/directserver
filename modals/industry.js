@@ -3,7 +3,7 @@ const mongoose = require("mongoose");
 const Schema = mongoose.Schema;
 const bcrypt = require("bcryptjs");
 
-const UserSchema = new Schema(
+const IndustrySchema = new Schema(
   {
     email: { type: String, trim: true, required: true },
     firstName: { type: String, trim: true, required: true },
@@ -20,12 +20,15 @@ const UserSchema = new Schema(
   { timestamps: true }
 );
 
-UserSchema.statics.CreateHash = async (password) => {
+IndustrySchema.statics.CreateHash = async (password) => {
   return await bcrypt.hashSync(password, 10);
 };
 
-UserSchema.statics.isPasswordEqual = async (password, passwordFromDatabase) => {
+IndustrySchema.statics.isPasswordEqual = async (
+  password,
+  passwordFromDatabase
+) => {
   return bcrypt.compare(password, passwordFromDatabase);
 };
 
-module.exports = mongoose.model("user", UserSchema);
+module.exports = mongoose.model("industry", IndustrySchema);
