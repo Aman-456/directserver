@@ -16,6 +16,18 @@ const IndustrySchema = new Schema(
     expireTime: { type: Date },
     type: { type: String, required: true },
     profileComplete: false,
+
+    companyName: { type: String },
+    registrationNo: { type: String },
+    registrationDate: { type: String },
+    taxId: { type: String },
+    image: { type: String },
+    businessType: { type: String },
+    industryType: { type: String },
+    address: { type: String },
+    industrySpecialization: { type: String },
+    description: { type: String },
+    buissnessType: { type: String },
   },
   { timestamps: true }
 );

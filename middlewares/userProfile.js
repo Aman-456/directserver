@@ -1,9 +1,11 @@
 const multer = require("multer");
 const fs = require("fs");
-
+const base = "assets/users/";
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const destination = "assets/users/" + req.body.type + "/" + req.body.email;
+    if (!file) return;
+
+    const destination = base + req.body.email;
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
     }
@@ -11,9 +13,16 @@ var storage = multer.diskStorage({
     cb(null, destination);
   },
   filename: function (req, file, cb) {
+    if (!file) return;
     if (file) {
-      var filename = "profile";
-      req.body.image = destination + "/" + filename;
+      const mimetype = file.mimetype;
+      const extension = mimetype.slice(
+        mimetype.indexOf("/") + 1,
+        mimetype.length
+      );
+      var filename = "profile" + "." + extension;
+
+      req.body.image = base + req.body.email + "/" + filename;
       cb(null, filename);
     }
   },

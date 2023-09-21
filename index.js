@@ -6,6 +6,7 @@ const compression = require("compression");
 const industry = require("./routes/industry.js");
 const academia = require("./routes/academia.js");
 const admin = require("./routes/admin.js");
+const projects = require("./routes/projects.js");
 
 require("./middlewares/authenticator.js");
 
@@ -42,9 +43,8 @@ app.use(function (req, res, next) {
 app.use("/academia", academia.routes);
 app.use("/industry", industry.routes);
 app.use("/admin", admin.routes);
+app.use("/projects", projects.routes);
 
 app.listen(port, () => {
   console.log(`Server listening at http://${host}:${port}`);
 });
-
-send();

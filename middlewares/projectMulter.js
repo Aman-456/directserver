@@ -1,19 +1,29 @@
 const multer = require("multer");
 const fs = require("fs");
-
+const base = "assets/projects";
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    const destination = "assets/projects/" + req.body.name;
+    if (!file) return;
+
+    const destination = base + "/" + req.body.title;
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
     }
 
     cb(null, destination);
-    cb(null, destination);
   },
   filename: function (req, file, cb) {
+    if (!file) return;
+
     if (file) {
-      var filename = "cover";
+      const mimetype = file.mimetype;
+      const extension = mimetype.slice(
+        mimetype.indexOf("/") + 1,
+        mimetype.length
+      );
+      var filename = "profile" + "." + extension;
+      const destination = base + "/" + req.body.title;
+
       req.body.image = destination + "/" + filename;
       cb(null, filename);
     }

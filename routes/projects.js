@@ -1,10 +1,16 @@
 const express = require("express");
 
-const projectsController = require("../controllers/projects");
+const projectController = require("../controllers/projects");
 const router = express.Router();
+const projectMulter = require("../middlewares/projectMulter");
+router.post(
+  "/addproject",
 
-router.post("/addproject", projectsController.addproject);
-router.get("/getprojects", projectsController.getprojects);
-router.get("/getproject", IndustryController.getproject);
+  projectMulter.upload.single("image"),
+
+  projectController.addproject
+);
+router.get("/getprojects", projectController.getprojects);
+router.get("/getproject", projectController.getproject);
 
 exports.routes = router;
