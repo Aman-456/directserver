@@ -166,3 +166,15 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
   }
 };
+
+exports.UpdateUSer = async (req, res) => {
+  try {
+    const user = await User.findOne({ email: req.body.email.toLowerCase() });
+    if (!user)
+      return res
+        .status(404)
+        .json({ type: "failure", result: "no profile found" });
+  } catch (error) {
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
