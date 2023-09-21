@@ -131,6 +131,7 @@ exports.verifyOTP = async (req, res) => {
 exports.verifyTempOTP = async (req, res) => {
   try {
     var otp = req.body.number;
+    console.log(otp);
     const data = await User.findOne({ email: req.body.email.toLowerCase() });
 
     const now = new Date();
@@ -138,7 +139,7 @@ exports.verifyTempOTP = async (req, res) => {
     if (now > new Date(temporarycodeOTP.expireTime)) {
       res.status(401).json({ type: "failure", result: "OTP has been expired" });
     } else {
-      if (otp === temporarycodeOTP.otp) {
+      if (otp === temporarycodeOTP.code) {
         const token = JWT.sign(
           { username: data._id, createdAt: data._createdAt },
           JWT_SECRET_KEY

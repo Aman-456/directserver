@@ -145,7 +145,7 @@ exports.sendTemporaryCodeOTP = async (user, res) => {
     var otp = Math.floor(1000 + Math.random() * 9000);
 
     const now = new Date();
-    const expiration_time = new Date(now.getTime() + 1 * 45000);
+    const expiration_time = new Date(now.getTime() + 1 * 60000);
 
     const obj = {
       code: otp,
