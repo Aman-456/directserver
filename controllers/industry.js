@@ -169,12 +169,19 @@ exports.changePassword = async (req, res) => {
 
 exports.UpdateUSer = async (req, res) => {
   try {
-    const user = await User.findOne({ email: req.body.email.toLowerCase() });
+    var user = await User.findOneAndUpdate(
+      { email: req.body.email.toLowerCase() },
+      { $set: req.body },
+      { new: true }
+    );
     if (!user)
       return res
         .status(404)
         .json({ type: "failure", result: "no profile found" });
+
+    return res.status(200).json({ type: "success", result: user });
   } catch (error) {
+    console.log(error.message);
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
   }
 };

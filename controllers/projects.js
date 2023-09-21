@@ -18,11 +18,8 @@ exports.addproject = async (req, res) => {
 
 exports.getprojects = async (req, res) => {
   try {
-    console.log(req.body);
     const project = await projects.find({});
-    if (project) {
-      res.status(200).json({ type: "success", result: project });
-    }
+    res.status(200).json({ type: "success", result: project });
   } catch (error) {
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
   }
