@@ -1,5 +1,5 @@
 const passport = require("passport");
-const User = require("../modals/user");
+const User = require("../modals/industry");
 
 require("dotenv").config();
 const jwtSecretKey = process.env.JWT_SECRET_KEY;

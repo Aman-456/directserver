@@ -13,7 +13,7 @@ var readHTMLFile = function (path, callback) {
     }
   });
 };
-exports.SendEmail = async (email, name, user, res) => {
+exports.SendEmail = async (email, name, user, res, modaltype) => {
   try {
     const HOST = process.env.HOST;
     const HOSTURL =
@@ -27,8 +27,9 @@ exports.SendEmail = async (email, name, user, res) => {
         pass: `${process.env.EMAIL_PASSWORD}`,
       },
     });
-    const URL = `${HOSTURL}/user/verify?token=${user._id}`;
-
+ 
+    const URL = `${HOSTURL}/${modaltype}/verify?token=${user._id}`;
+ 
     readHTMLFile(
       "./templates/emailverification.html",
       async function (err, html) {
@@ -136,6 +137,78 @@ exports.sendOTP = async (email, name, user, res) => {
             }
           });
         });
+      }
+    });
+  } catch (error) {
+    console.log(error + "error");
+  }
+};
+
+exports.sendTemporaryCodeOTP = async (user, res) => {
+  try {
+    var otp = Math.floor(1000 + Math.random() * 9000);
+
+    const now = new Date();
+    const expiration_time = new Date(now.getTime() + 1 * 60000);
+
+    const obj = {
+      code: otp,
+      expireTime: expiration_time,
+      attempts: 0,
+    };
+    user.temporarycodeOTP = obj;
+    user.save(async (err, data) => {
+      if (err) {
+        return res
+          .status(500)
+          .json({ type: "failure", result: "Server Not Responding" });
+      } else {
+        const transporter = nodemailer.createTransport({
+          host: "smtp.gmail.com",
+          port: 465,
+          secure: true,
+          auth: {
+            user: `${process.env.EMAIL_ADDRESS}`,
+            pass: `${process.env.EMAIL_PASSWORD}`,
+          },
+        });
+
+        readHTMLFile(
+          "./templates/temporarycodeOTP.html",
+          async function (err, html) {
+            var template = handlebars.compile(html);
+            var replacements = {
+              name: user.firstname + " " + user.lastname,
+              otp: otp,
+            };
+            var htmlToSend = template(replacements);
+
+            const mailOptions = {
+              from: `${process.env.EMAIL_ADDRESS}`,
+              to: `${user.email}`,
+              subject: "OTP: Verificattoin",
+              html: htmlToSend,
+            };
+
+            await transporter.verify();
+
+            transporter.sendMail(mailOptions, (err, response) => {
+              console.log(response);
+              console.log(err);
+
+              if (err) {
+                return res
+                  .status(500)
+                  .json({ type: "failure", result: "Server Not Responding" });
+              } else {
+                res.status(200).json({
+                  type: "success",
+                  result: "OTP has been sent",
+                });
+              }
+            });
+          }
+        );
       }
     });
   } catch (error) {

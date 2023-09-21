@@ -3,8 +3,9 @@ const app = express();
 const cors = require("cors");
 const compression = require("compression");
 
-const user = require("./routes/user.js");
-const { send } = require("./common/sms.js");
+const industry = require("./routes/industry.js");
+const academia = require("./routes/academia.js");
+const admin = require("./routes/admin.js");
 
 require("./middlewares/authenticator.js");
 
@@ -38,7 +39,9 @@ app.use(function (req, res, next) {
   console.log("api: " + req.originalUrl);
   next();
 });
-app.use("/user", user.routes);
+app.use("/academia", academia.routes);
+app.use("/industry", industry.routes);
+app.use("/admin", admin.routes);
 
 app.listen(port, () => {
   console.log(`Server listening at http://${host}:${port}`);
