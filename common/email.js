@@ -15,6 +15,9 @@ var readHTMLFile = function (path, callback) {
 };
 exports.SendEmail = async (email, name, user, res, modaltype) => {
   try {
+    const HOST = process.env.HOST;
+    const HOSTURL =
+      HOST === "PROD" ? process.env.HOSTURL_PROD : process.env.HOSTURL_LOCAL;
     const transporter = await nodemailer.createTransport({
       host: "smtp.gmail.com",
       port: 465,
@@ -24,8 +27,9 @@ exports.SendEmail = async (email, name, user, res, modaltype) => {
         pass: `${process.env.EMAIL_PASSWORD}`,
       },
     });
-    const URL = `http://${process.env.HOST}:${process.env.PORT}/${modaltype}/verify?token=${user._id}`;
-
+ 
+    const URL = `${HOSTURL}/${modaltype}/verify?token=${user._id}`;
+ 
     readHTMLFile(
       "./templates/emailverification.html",
       async function (err, html) {
