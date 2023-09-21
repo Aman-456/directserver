@@ -1,4 +1,4 @@
-const User = require("../modals/user");
+const User = require("../modals/industry");
 const { SendEmail } = require("../common/email");
 const path = require("path");
 const JWT = require("jsonwebtoken");
@@ -23,7 +23,7 @@ exports.signUP = async (req, res) => {
       return;
     }
 
-    SendEmail(user.email, user.firstname, user, res);
+    SendEmail(user.email, user.firstname, user, res, "industry");
   } catch (error) {
     console.log(error);
     res
@@ -91,12 +91,7 @@ exports.signIn = async (req, res) => {
           result: "User Login Successfully",
           token: token,
           userDetails: {
-            id: user._id,
-            email: user.email,
-            firstname: user.firstName,
-            lastname: user.lastName,
-            phone: user.phone,
-            role: user.primaryRole,
+            ...user._doc,
           },
         });
       } else {
