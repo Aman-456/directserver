@@ -28,7 +28,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
   next();
 });
-app.use("/assets", express.static("assets"));
+app.use("/asset", express.static("asset"));
 
 //Port and Host
 const port = process.env.PORT || 3000;

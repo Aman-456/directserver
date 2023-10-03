@@ -1,7 +1,7 @@
 const multer = require("multer");
 const fs = require("fs");
 
-const destination = "assets/user";
+const destination = "asset/user";
 if (!fs.existsSync(destination)) {
   fs.mkdirSync(destination, { recursive: true });
 }
