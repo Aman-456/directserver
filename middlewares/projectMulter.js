@@ -21,11 +21,10 @@ var storage = multer.diskStorage({
         mimetype.indexOf("/") + 1,
         mimetype.length
       );
-      var filename = "profile" + "." + extension;
-      const destination = base;
+      var filename = new Date().getUTCMilliseconds() + file?.originalname;
+      +"." + extension;
 
-      req.body.image =
-        destination + "/" + filename + new Date().getMilliseconds();
+      req.body.image = base + "/" + filename;
       cb(null, filename);
     }
   },
