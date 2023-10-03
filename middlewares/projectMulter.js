@@ -1,11 +1,11 @@
 const multer = require("multer");
 const fs = require("fs");
-const base = "assets/projects";
+const base = "asset/projects";
 var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (!file) return;
 
-    const destination = base + "/" + req.body.title;
+    const destination = base;
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
     }
@@ -22,7 +22,7 @@ var storage = multer.diskStorage({
         mimetype.length
       );
       var filename = "profile" + "." + extension;
-      const destination = base + "/" + req.body.title;
+      const destination = base;
 
       req.body.image = destination + "/" + filename;
       cb(null, filename);
