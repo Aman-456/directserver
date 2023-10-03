@@ -24,7 +24,8 @@ var storage = multer.diskStorage({
       var filename = "profile" + "." + extension;
       const destination = base;
 
-      req.body.image = destination + "/" + filename;
+      req.body.image =
+        destination + "/" + filename + new Date().getMilliseconds();
       cb(null, filename);
     }
   },
