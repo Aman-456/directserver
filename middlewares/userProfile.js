@@ -5,7 +5,7 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (!file) return;
 
-    const destination = base + req.body.email;
+    const destination = base + req.body.email; 
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
     }

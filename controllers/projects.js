@@ -2,8 +2,7 @@ const projects = require("../modals/projects");
 
 exports.addproject = async (req, res) => {
   try {
-    console.log(req.body);
-    const project = new projects(req.body);
+    const project = new projects({ ...req.body, id: req.id });
     await project.save();
     if (project) {
       res.status(200).json({ type: "success", result: project });
@@ -28,7 +27,7 @@ exports.getprojects = async (req, res) => {
 exports.getproject = async (req, res) => {
   try {
     const { id } = req.query;
-    const project = await projects.findOne({ _id: id });
+    const project = await projects.findOne({ id: id });
     if (project) {
       res.status(200).json({ type: "success", result: project });
     }

@@ -4,6 +4,7 @@ const Schema = mongoose.Schema;
 
 const ProjectsSchema = new Schema(
   {
+    id: { type: String, required: true },
     title: {
       type: String,
       required: true, // Makes the 'title' field required

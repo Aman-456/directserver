@@ -1,13 +1,13 @@
 const express = require("express");
 
 const projectController = require("../controllers/projects");
-const router = express.Router();
 const projectMulter = require("../middlewares/projectMulter");
+const SetProjectId = require("../controllers/SetProjectId");
+const router = express.Router();
 router.post(
   "/addproject",
-
+  SetProjectId.seProjectId,
   projectMulter.upload.single("image"),
-
   projectController.addproject
 );
 router.get("/getprojects", projectController.getprojects);
