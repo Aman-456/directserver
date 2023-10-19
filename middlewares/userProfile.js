@@ -5,7 +5,7 @@ var storage = multer.diskStorage({
   destination: function (req, file, cb) {
     if (!file) return;
 
-    const destination = base + req.body.email; 
+    const destination = base;
     if (!fs.existsSync(destination)) {
       fs.mkdirSync(destination, { recursive: true });
     }
@@ -15,14 +15,10 @@ var storage = multer.diskStorage({
   filename: function (req, file, cb) {
     if (!file) return;
     if (file) {
-      const mimetype = file.mimetype;
-      const extension = mimetype.slice(
-        mimetype.indexOf("/") + 1,
-        mimetype.length
-      );
-      var filename = "profile" + "." + extension;
+      var filename =
+        new Date().getMilliseconds() + "profile" + file.originalname;
 
-      req.body.image = base + req.body.email + "/" + filename;
+      req.body.image = base + filename;
       cb(null, filename);
     }
   },

@@ -169,9 +169,40 @@ exports.changePassword = async (req, res) => {
 
 exports.UpdateUSer = async (req, res) => {
   try {
+    console.log(req.body);
+    const {
+      email,
+      firstName,
+      lastName,
+      phone,
+      type,
+      password,
+      createdAt,
+      updatedAt,
+      partnerFirm,
+      localBank,
+      foreignBank,
+      registerWithGov,
+      pastContract,
+
+      _id,
+      ...rest
+    } = req.body;
+    const getparse = (val) => {
+      return JSON.parse(val);
+    };
     var user = await User.findOneAndUpdate(
       { email: req.body.email.toLowerCase() },
-      { $set: req.body },
+      {
+        $set: {
+          ...rest,
+          pastContract: getparse(pastContract),
+          localBank: getparse(localBank),
+          foreignBank: getparse(foreignBank),
+          registerWithGov: getparse(registerWithGov),
+          partnerFirm: getparse(partnerFirm),
+        },
+      },
       { new: true }
     );
     if (!user)
