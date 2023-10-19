@@ -166,3 +166,94 @@ exports.changePassword = async (req, res) => {
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
   }
 };
+
+exports.UpdateUSer = async (req, res) => {
+  try {
+    const {
+      email,
+      firstName,
+      lastName,
+      phone,
+      type,
+      password,
+      createdAt,
+      updatedAt,
+      partnerFirm,
+      localBank,
+      foreignBank,
+      registerWithGov,
+      pastContract,
+
+      _id,
+      qualificationSection,
+      experienceSection,
+      university,
+      awardsSection,
+      scopusSection,
+      socialMediaSection,
+      membershipSection,
+      researchProjectsSection,
+      industrialProjectsSection,
+      researchArticlesSection,
+      conferenceSection,
+      bookChapSection,
+      bookSection,
+      editorialSection,
+      patentsSection,
+      copyRightsSection,
+      industrialDesignsSection,
+      technologyTransferedSection,
+      attendedSection,
+      organizedSection,
+      phdSection,
+      mastersSection,
+      ...rest
+    } = req.body;
+    const getparse = (val) => {
+      if (!val) {
+        return null;
+      }
+      return JSON.parse(val);
+    };
+    var user = await User.findOneAndUpdate(
+      { email: req.body.email.toLowerCase() },
+      {
+        $set: {
+          ...rest,
+          qualificationSection: getparse(qualificationSection),
+          experienceSection: getparse(experienceSection),
+          university: getparse(university),
+          awardsSection: getparse(awardsSection),
+          scopusSection: getparse(scopusSection),
+          socialMediaSection: getparse(socialMediaSection),
+          membershipSection: getparse(membershipSection),
+          researchProjectsSection: getparse(researchProjectsSection),
+          industrialProjectsSection: getparse(industrialProjectsSection),
+          researchArticlesSection: getparse(researchArticlesSection),
+          conferenceSection: getparse(conferenceSection),
+          bookChapSection: getparse(bookChapSection),
+          bookSection: getparse(bookSection),
+          editorialSection: getparse(editorialSection),
+          patentsSection: getparse(patentsSection),
+          copyRightsSection: getparse(copyRightsSection),
+          industrialDesignsSection: getparse(industrialDesignsSection),
+          technologyTransferedSection: getparse(technologyTransferedSection),
+          attendedSection: getparse(attendedSection),
+          organizedSection: getparse(organizedSection),
+          phdSection: getparse(phdSection),
+          mastersSection: getparse(mastersSection),
+        },
+      },
+      { new: true }
+    );
+    if (!user)
+      return res
+        .status(404)
+        .json({ type: "failure", result: "no profile found" });
+
+    return res.status(200).json({ type: "success", result: user });
+  } catch (error) {
+    console.log(error.message);
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
