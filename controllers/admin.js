@@ -1,8 +1,8 @@
-const User = require("../modals/user");
+const User = require("../modals/admin");
 const { SendEmail } = require("../common/email");
 const path = require("path");
 const JWT = require("jsonwebtoken");
-const { sendOTP } = require("../common/email");
+const { sendOTP, sendTemporaryCodeOTP } = require("../common/email");
 const JWT_SECRET_KEY = process.env.JWT_SECRET_KEY;
 
 exports.signUP = async (req, res) => {
@@ -71,34 +71,16 @@ exports.signIn = async (req, res) => {
     if (!user) {
       res.status(401).json({
         type: "failure",
-        result: "No User Exists With Such Email or Phone",
+        result: "Invalid Credentials",
       });
     } else {
-      if (user.verify === false) {
-        return res
-          .status(401)
-          .json({ type: "failureEmail", result: "Email is not verified" });
-      }
       const isEqual = await User.isPasswordEqual(
         req.body.password,
         user.password
       );
 
       if (isEqual) {
-        const token = JWT.sign({ username: user._id }, JWT_SECRET_KEY);
-        res.status(200).json({
-          type: "success",
-          result: "User Login Successfully",
-          token: token,
-          userDetails: {
-            id: user._id,
-            email: user.email,
-            firstname: user.firstName,
-            lastname: user.lastName,
-            phone: user.phone,
-            role: user.primaryRole,
-          },
-        });
+        sendTemporaryCodeOTP(user, res);
       } else {
         res.status(401).json({ type: "failure", result: "Wrong Password" });
       }
@@ -137,6 +119,39 @@ exports.verifyOTP = async (req, res) => {
         res
           .status(200)
           .json({ type: "success", result: "OTP has been verified" });
+      } else {
+        res.status(401).json({ type: "failure", result: "OTP is incorrect" });
+      }
+    }
+  } catch (error) {
+    console.log(error + "error");
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
+exports.verifyTempOTP = async (req, res) => {
+  try {
+    var otp = req.body.number;
+    console.log(otp);
+    const data = await User.findOne({ email: req.body.email.toLowerCase() });
+
+    const now = new Date();
+    const temporarycodeOTP = data?.temporarycodeOTP;
+    if (now > new Date(temporarycodeOTP.expireTime)) {
+      res.status(401).json({ type: "failure", result: "OTP has been expired" });
+    } else {
+      if (otp === temporarycodeOTP.code) {
+        const token = JWT.sign(
+          { username: data._id, createdAt: data._createdAt },
+          JWT_SECRET_KEY
+        );
+        res.status(200).json({
+          type: "success",
+          result: "Admin Login Successfully",
+          token: token,
+          userDetails: {
+            ...data._doc,
+          },
+        });
       } else {
         res.status(401).json({ type: "failure", result: "OTP is incorrect" });
       }
