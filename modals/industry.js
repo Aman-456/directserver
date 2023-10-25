@@ -28,6 +28,13 @@ const IndustrySchema = new Schema(
     industrySpecialization: { type: String },
     description: { type: String },
     buissnessType: { type: String },
+
+    //
+    partnerFirm: { type: Array },
+    localBank: { type: Array },
+    foreignBank: { type: Array },
+    registerWithGov: { type: Array },
+    pastContract: { type: Array },
   },
   { timestamps: true }
 );

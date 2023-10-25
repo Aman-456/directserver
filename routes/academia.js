@@ -5,9 +5,10 @@ const userProfileMulter = require("../middlewares/userProfile");
 
 const router = express.Router();
 
-router.post("/signup", academiaController.signUP);
+router.post("/signup", academiaController.signUP); 
 router.get("/verify", academiaController.Verify);
 router.post("/signin", academiaController.signIn);
+router.post("/getmyprofile", academiaController.getmyprofile);
 router.post("/otpsend", academiaController.OTP);
 router.post("/verifyotp", academiaController.verifyOTP);
 router.post("/changepassword", academiaController.changePassword);

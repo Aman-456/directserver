@@ -85,7 +85,11 @@ exports.signIn = async (req, res) => {
       );
 
       if (isEqual) {
-        const token = JWT.sign({ username: user._id }, JWT_SECRET_KEY);
+        const token = JWT.sign(
+          { username: user._id, type: "industry" },
+          JWT_SECRET_KEY
+        );
+        console.log({ user });
         res.status(200).json({
           type: "success",
           result: "User Login Successfully",
@@ -98,6 +102,22 @@ exports.signIn = async (req, res) => {
         res.status(401).json({ type: "failure", result: "Wrong Password" });
       }
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
+exports.getmyprofile = async (req, res) => {
+  try {
+    var user = await User.findOne({
+      $or: [{ _id: req.body._id }],
+    });
+    res.status(200).json({
+      type: "success",
+      userDetails: {
+        ...user._doc,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
