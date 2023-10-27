@@ -209,6 +209,9 @@ exports.UpdateUSer = async (req, res) => {
       ...rest
     } = req.body;
     const getparse = (val) => {
+      if (!val) {
+        return null;
+      }
       return JSON.parse(val);
     };
     var user = await User.findOneAndUpdate(

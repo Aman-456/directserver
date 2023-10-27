@@ -31,7 +31,7 @@ exports.getIndustries = async (req, res) => {
 exports.getProjects = async (req, res) => {
   try {
     const response = await axios.get(
-      `https://qalam.nust.edu.pk/odoocms_api?alias=ric_expert_portal_project&auth=d05a6d2391a1a4c25e0923034eadfc31&rows=200&pi_copi_cmsid=`
+      `https://qalam.nust.edu.pk/odoocms_api?alias=ric_expert_portal_project&auth=d05a6d2391a1a4c25e0923034eadfc31&rows=1000&title=`
     );
     console.log(response);
     res.json(response?.data).status(200);

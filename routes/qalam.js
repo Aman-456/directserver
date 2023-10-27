@@ -8,7 +8,7 @@ router.use(
     target: "https://qalam.nust.edu.pk",
     changeOrigin: true,
   })
-);
+); 
 
 router.get("/profiles", qalamController.getProfiles);
 router.get("/industries", qalamController.getIndustries);
