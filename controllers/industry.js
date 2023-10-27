@@ -1,4 +1,4 @@
-const User = require("../modals/user");
+const User = require("../modals/industry");
 const { SendEmail } = require("../common/email");
 const path = require("path");
 const JWT = require("jsonwebtoken");
@@ -23,7 +23,7 @@ exports.signUP = async (req, res) => {
       return;
     }
 
-    SendEmail(user.email, user.firstname, user, res);
+    SendEmail(user.email, user.firstname, user, res, "industry");
   } catch (error) {
     console.log(error);
     res
@@ -85,24 +85,39 @@ exports.signIn = async (req, res) => {
       );
 
       if (isEqual) {
-        const token = JWT.sign({ username: user._id }, JWT_SECRET_KEY);
+        const token = JWT.sign(
+          { username: user._id, type: "industry" },
+          JWT_SECRET_KEY
+        );
+        console.log({ user });
         res.status(200).json({
           type: "success",
           result: "User Login Successfully",
           token: token,
           userDetails: {
-            id: user._id,
-            email: user.email,
-            firstname: user.firstName,
-            lastname: user.lastName,
-            phone: user.phone,
-            role: user.primaryRole,
+            ...user._doc,
           },
         });
       } else {
         res.status(401).json({ type: "failure", result: "Wrong Password" });
       }
     }
+  } catch (error) {
+    console.log(error);
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
+exports.getmyprofile = async (req, res) => {
+  try {
+    var user = await User.findOne({
+      $or: [{ _id: req.body._id }],
+    });
+    res.status(200).json({
+      type: "success",
+      userDetails: {
+        ...user._doc,
+      },
+    });
   } catch (error) {
     console.log(error);
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
@@ -168,6 +183,59 @@ exports.changePassword = async (req, res) => {
         return;
       });
   } catch (error) {
+    res.status(500).json({ type: "failure", result: "Server Not Responding" });
+  }
+};
+
+exports.UpdateUSer = async (req, res) => {
+  try {
+    console.log(req.body);
+    const {
+      email,
+      firstName,
+      lastName,
+      phone,
+      type,
+      password,
+      createdAt,
+      updatedAt,
+      partnerFirm,
+      localBank,
+      foreignBank,
+      registerWithGov,
+      pastContract,
+
+      _id,
+      ...rest
+    } = req.body;
+    const getparse = (val) => {
+      if (!val) {
+        return null;
+      }
+      return JSON.parse(val);
+    };
+    var user = await User.findOneAndUpdate(
+      { email: req.body.email.toLowerCase() },
+      {
+        $set: {
+          ...rest,
+          pastContract: getparse(pastContract),
+          localBank: getparse(localBank),
+          foreignBank: getparse(foreignBank),
+          registerWithGov: getparse(registerWithGov),
+          partnerFirm: getparse(partnerFirm),
+        },
+      },
+      { new: true }
+    );
+    if (!user)
+      return res
+        .status(404)
+        .json({ type: "failure", result: "no profile found" });
+
+    return res.status(200).json({ type: "success", result: user });
+  } catch (error) {
+    console.log(error.message);
     res.status(500).json({ type: "failure", result: "Server Not Responding" });
   }
 };

@@ -3,7 +3,11 @@ const app = express();
 const cors = require("cors");
 const compression = require("compression");
 
-const user = require("./routes/user.js");
+const industry = require("./routes/industry.js");
+const academia = require("./routes/academia.js");
+const admin = require("./routes/admin.js");
+const projects = require("./routes/projects.js");
+const qalam = require("./routes/qalam.js");
 
 require("./middlewares/authenticator.js");
 
@@ -25,7 +29,7 @@ app.use((req, res, next) => {
   res.header("Access-Control-Allow-Methods", "PUT, GET, POST, DELETE, OPTIONS");
   next();
 });
-app.use("/assets", express.static("assets"));
+app.use("/asset", express.static("asset"));
 
 //Port and Host
 const port = process.env.PORT || 3000;
@@ -37,7 +41,11 @@ app.use(function (req, res, next) {
   console.log("api: " + req.originalUrl);
   next();
 });
-app.use("/user", user.routes);
+app.use("/academia", academia.routes);
+app.use("/industry", industry.routes);
+app.use("/admin", admin.routes);
+app.use("/projects", projects.routes);
+app.use("/qalam", qalam.routes);
 
 app.listen(port, () => {
   console.log(`Server listening at http://${host}:${port}`);
